@@ -22,8 +22,26 @@ const produtos = [
   },
 ]
 
-function renderizaProduto(produto) {
+const carrinhoItens =  {
+  'abc123': {
+    id: 'abc123',
+    nome: 'JSRaiz para FW',
+    preco: 300,
+    descricao: 'O melhor curso do mundo',
+    imagem: 'https://lorempixel.com/500/300'
+  },
+  'bbc123': {
+    id: 'bbc123',
+    nome: 'JSRaiz para Node',
+    preco: 1200,
+    descricao: 'O melhor curso do mundo',
+    imagem: 'https://lorempixel.com/500/300'
+  },
+}
 
+console.log(carrinhoItens['abc123']);
+
+function renderizaProduto(produto) {
   return `
   <div class="col-sm-4 mb-3">
     <div class="card loja__item">
