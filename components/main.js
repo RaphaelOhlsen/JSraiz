@@ -39,6 +39,19 @@ function renderizaProduto(produto) {
   `
 }
 
+function renderizaCarrinho() {
+  return `
+  <div class="card carrinho_item">
+    <div class="card-body">
+      <h5 class="card-title">TESTE</h5>
+      <p class="card-text">Preço unidade: R$ 300,00 | Quantidade: 2  </p>
+      <p class="card-text">Valor: R$ 600,00</p>
+      <button class="btn btn-danger btn-sm">Remover</button>
+    </div>
+  </div>
+  `
+}
+
 function renderizaProdutos() {
   let html = '';
   produtos.forEach(produto => html = html + renderizaProduto(produto));
@@ -46,4 +59,5 @@ function renderizaProdutos() {
 }
 
 document.querySelector('.loja').innerHTML = renderizaProdutos();
+document.querySelector('.carrinho_itens').innerHTML = renderizaCarrinho();
 
