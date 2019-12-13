@@ -22,26 +22,9 @@ const produtos = [
   },
 ]
 
-const carrinhoItens =  {
-  'abc123': {
-    id: 'abc123',
-    nome: 'JSRaiz para FW',
-    preco: 300,
-    descricao: 'O melhor curso do mundo',
-    imagem: 'https://lorempixel.com/500/300',
-    quantidade: 1
-  },
-  'bbc123': {
-    id: 'bbc123',
-    nome: 'JSRaiz para Node',
-    preco: 1200,
-    descricao: 'O melhor curso do mundo',
-    imagem: 'https://lorempixel.com/500/300', 
-    quantidade: 2
-  },
-}
+const carrinhoItens =  {}
 
-function renderizaProduto(produto) {
+function renderizaProduto(produto, index) {
   return `
   <div class="col-sm-4 mb-3">
     <div class="card loja__item">
@@ -50,7 +33,7 @@ function renderizaProduto(produto) {
         <h5 class="card-title">${produto.nome}</h5>
         <small>${produto.preco}</small>
         <p class="card-text">${produto.descricao}</p>           
-        <button data-value="300" class="btn btn-primary btn-add">Adcionar</button>
+        <button data-index="${index}" class="btn btn-primary btn-add">Adcionar</button>
       </div>
     </div>
   </div>
@@ -72,7 +55,7 @@ function renderizaItemCarrinho(produtoCarrinho) {
 
 function renderizaProdutos() {
   let html = '';
-  produtos.forEach(produto => html = html + renderizaProduto(produto));
+  produtos.forEach((produto, idx) => html = html + renderizaProduto(produto, idx));
   return html;
 }
 
@@ -81,14 +64,24 @@ function renderizaCarrinho() {
   for (let produtoId in carrinhoItens) {
     html = html + renderizaItemCarrinho(carrinhoItens[produtoId]);
   }
-  return html;
+  document.querySelector('.carrinho_itens').innerHTML = html;
 }
 
 document.body.addEventListener('click', function(ev) {
   const elemento = ev.target;
-  if (elemento.classList.contains('btn-add')) alert('Clicou adicionar');
-})
+  if (elemento.classList.contains('btn-add')) {
+    const index = parseInt(elemento.getAttribute('data-index'), 10);
+    const produto = produtos[index];
+    
+    if (!carrinhoItens[produto.id]) {
+      carrinhoItens[produto.id] = produto;
+      carrinhoItens[produto.id].quantidade = 1;
+    }
+
+    renderizaCarrinho();
+  }
+});
 
 document.querySelector('.loja').innerHTML = renderizaProdutos();
-document.querySelector('.carrinho_itens').innerHTML = renderizaCarrinho();
+
 
