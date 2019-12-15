@@ -47,19 +47,19 @@ function renderizaItemCarrinho(produtoCarrinho) {
       <h5 class="card-title">${produtoCarrinho.nome}</h5>
       <p class="card-text">Preço unidade: R$ ${produtoCarrinho.preco},00 | Quantidade: ${produtoCarrinho.quantidade}  </p>
       <p class="card-text">Valor: R$ ${produtoCarrinho.preco * produtoCarrinho.quantidade},00</p>
-      <button class="btn btn-danger btn-sm">Remover</button>
+      <button data-produtoId="${produtoCarrinho.id}" class="btn btn-danger btn-sm btn-remove">Remover</button>
     </div>
   </div>
   `
 }
 
-function renderizaProdutos() {
+const renderizaProdutos = () => {
   let html = '';
   produtos.forEach((produto, idx) => html = html + renderizaProduto(produto, idx));
   return html;
 }
 
-function renderizaCarrinho() {
+const renderizaCarrinho = () => {
   let html = '';
   for (let produtoId in carrinhoItens) {
     html = html + renderizaItemCarrinho(carrinhoItens[produtoId]);
@@ -67,20 +67,60 @@ function renderizaCarrinho() {
   document.querySelector('.carrinho_itens').innerHTML = html;
 }
 
-document.body.addEventListener('click', function(ev) {
+const renderizaCarrinhoTotal = () => {
+  
+  let total = Object.values(carrinhoItens).reduce((acc, item) => {
+    return acc + item.preco * item.quantidade
+  },0)
+
+  total ? document.querySelector('.carrinho_total').innerHTML = `<h6>Total: <strong>R$${total},00</strong></h6>` : document.querySelector('.carrinho_total').innerHTML = `<h6><strong>Carrinho Vazio</strong></h6>`
+  
+  
+}
+
+const adicionaItemNoCarrinho = produto => {
+  if (!carrinhoItens[produto.id]) {
+    carrinhoItens[produto.id] = produto;
+    carrinhoItens[produto.id].quantidade = 0;
+  }
+  ++carrinhoItens[produto.id].quantidade;
+
+  renderizaCarrinho();
+  renderizaCarrinhoTotal();
+
+}
+
+const removeItemNoCarrinho = produto => {
+ 
+  --produto.quantidade;
+
+  !produto.quantidade && delete carrinhoItens[produto.id];
+
+  renderizaCarrinho();
+  renderizaCarrinhoTotal();
+}
+
+document.body.addEventListener('click', ev => {
   const elemento = ev.target;
+  
   if (elemento.classList.contains('btn-add')) {
     const index = parseInt(elemento.getAttribute('data-index'), 10);
     const produto = produtos[index];
-    
-    if (!carrinhoItens[produto.id]) {
-      carrinhoItens[produto.id] = produto;
-      carrinhoItens[produto.id].quantidade = 1;
-    }
+    adicionaItemNoCarrinho(produto);
+  }
 
-    renderizaCarrinho();
+  if (elemento.classList.contains('btn-remove')) {
+    const index = elemento.getAttribute('data-produtoId');
+    const produto = carrinhoItens[index];
+    removeItemNoCarrinho(produto);
+    
   }
 });
+
+// document.body.addEventListener('click', ev => {
+//   const elemento = ev.target;
+  
+// })
 
 document.querySelector('.loja').innerHTML = renderizaProdutos();
 
