@@ -54,8 +54,8 @@ function renderizaItemCarrinho(produtoCarrinho) {
 }
 
 const renderizaProdutos = () => {
-  let html = '';
-  produtos.forEach((produto, idx) => html = html + renderizaProduto(produto, idx));
+  let html = produtos.map((produto, idx) => 
+    renderizaProduto(produto, idx)).join('');
   return html;
 }
 
